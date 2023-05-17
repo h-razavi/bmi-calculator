@@ -1,44 +1,49 @@
-import React , { useState} from "react";
+import React , { createContext, useState} from "react";
 
-type DataType = {
-    height : number,
-    weight : number,
-    isMetric : boolean,
-    setUnitsImperial : ()=>void
-    setUnitsMetric : ()=>void
+type DataContextType = {
+    isMetric: boolean;
+    height: number;
+    weight: number;
+    setMetric: (isMetric: boolean) => void;
+    setHeight: (height: number) => void;
+    setWeight: (weight: number) => void;
+  };
+
+let defaultValue : DataContextType = {
+    isMetric: true,
+    height: 0,
+    weight: 0,
+    setMetric: () => {},
+    setHeight: () => {},
+    setWeight: () => {},
 }
 
-let defaultValue : DataType = {
-    height : 0,
-    weight : 0,
-    isMetric : true,
-    setUnitsImperial : ()=>{},
-    setUnitsMetric : ()=>{}
-}
+export const DataContext = createContext<DataContextType>(defaultValue);
 
-export const DataContext = React.createContext(defaultValue);
+type DataContextProviderProps = {
+    children: React.ReactNode;
+  };
 
-export default function DataProvider({children}:any){
-    const [isMetric , setIsMetric] = useState(true)
+  export const DataContextProvider: React.FC<DataContextProviderProps> = ({
+    children,
+  }) => {
+    const [isMetric, setIsMetric] = useState(true);
+    const [height, setHeight] = useState(0);
+    const [weight, setWeight] = useState(0);
 
-    const setUnitsImperial = ()=>{
-        if(isMetric){
-            setIsMetric(false)
-        }
-    }
+    const setMetric = (isMetric: boolean) => {
+        setIsMetric(isMetric);
+      };
 
-    const setUnitsMetric = ()=>{
-        if(!isMetric){
-            setIsMetric(true)
-        }
-    }
 
-    let data : DataType = {
-        height : 0,
-        weight : 0,
-        isMetric,
-        setUnitsImperial,
-        setUnitsMetric
+
+    let data : DataContextType = {
+        isMetric, 
+        height, 
+        weight, 
+        setMetric, 
+        setHeight, 
+        setWeight
     }
 
 
