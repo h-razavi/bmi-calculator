@@ -1,7 +1,9 @@
 import React, { useContext, useRef } from "react";
-import Box from "./Box";
 import { useNavigate } from "react-router-dom";
 import { DataContext } from "./data-context";
+import Box from "./Box";
+import GreenButton from "./GreenButton";
+import RedButton from "./RedButton";
 
 function Weight() {
   let { isMetric, setWeight } = useContext(DataContext);
@@ -21,7 +23,7 @@ function Weight() {
           Please Enter Your Weight
         </h2>
         <form
-          className="flex flex-col gap-6 justify-center mt-2 w-[50%] mx-auto"
+          className="flex flex-col gap-6 justify-center items-center mt-4 w-3/4 lg:w-[70%] mx-auto overflow-visible"
           onSubmit={handleSubmit}
         >
           <input
@@ -29,24 +31,20 @@ function Weight() {
             id="weight"
             ref={weightInputRef}
             placeholder={`Your Weight in ${isMetric ? "KGs" : "lbs"}`}
-            className="text-black"
+            className="text-black mt-1 block w-3/4 border border-gray-400 h-12 rounded-lg p-2 mx-auto"
             min={0}
             max={200}
           />
-          <div className="flex gap-6 justify-center mt-8 w-[50%] mx-auto">
-            <button
-              type="submit"
-              className="border-solid border-green-400 border-2 p-2 rounded-lg hover:shadow-md hover:shadow-slate-500 active:bg-green-400"
-            >
+          <div className="flex lg:flex-row flex-col w-[24rem] items-center justify-center gap-4">
+            <GreenButton
+              type="submit"            >
               Submit
-            </button>
-            <button
+            </GreenButton>
+            <RedButton
               type="button"
-              onClick={()=>navigate("/height")}
-              className="border-solid border-red-400 border-2 p-2 rounded-lg hover:shadow-md hover:shadow-slate-500 active:bg-red-400"
-            >
+              onClick={()=>navigate("/height")}            >
               Go Back
-            </button>
+            </RedButton>
           </div>
         </form>
       </Box>

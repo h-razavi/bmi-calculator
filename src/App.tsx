@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Welcome from "./components/Welcome";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import UnitSelector from "./components/UnitSelector";
@@ -6,6 +5,7 @@ import Height from "./components/Height";
 import {DataContextProvider} from "./components/data-context";
 import Weight from "./components/Weight";
 import Results from "./components/Results";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
           </Routes>
         </MemoryRouter>
       </DataContextProvider>
+      <Footer />
     </div>
   );
 }

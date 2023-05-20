@@ -1,11 +1,14 @@
-import React, { useContext } from "react";
+import  { useContext } from "react";
 import { DataContext } from "./data-context";
+import { useNavigate } from "react-router-dom";
 import Box from "./Box";
 
 type Props = {};
 
 function Results({}: Props) {
+  //Get data from global context
   const { height, weight, isMetric } = useContext(DataContext);
+  const navigate = useNavigate();
 
   function calculateBMI(
     height: number,
@@ -28,6 +31,9 @@ function Results({}: Props) {
   let bmiResultsRating = "";
   let bmiNumStyles = { color: "" };
   let bmiResultText = "";
+
+
+  //Showing different “BMI” results depending on the current state of the metric system and the user's weight and height.
 
   switch (true) {
     case bmi < 18.5:
@@ -68,11 +74,11 @@ function Results({}: Props) {
         <p className="text-6xl font-bold" style={bmiNumStyles}>
           {bmi}
         </p>
-        <p className="w-[80%] mx-auto mt-6">{bmiResultText}</p>
+        <p className="w-[80%] mx-auto my-6 text-justify text-lg">{bmiResultText}</p>
         <button
-          type="reset"
-          className="border-solid border-green-400 border-2 p-2 rounded-lg hover:shadow-md hover:shadow-slate-500 active:bg-green-400"
-        >
+          onClick={() => navigate("/")}
+          className="my-6 bg-[var(--primary-button)] p-3 rounded-lg hover:bg-[var(--primary-link)] font-extrabold text-xl"
+          >
           Start Over
         </button>
       </Box>

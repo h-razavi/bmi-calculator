@@ -1,10 +1,13 @@
 import React, { useContext, useRef, useState } from "react";
-import {  useNavigate } from "react-router-dom";
-import Box from "./Box";
+import { useNavigate } from "react-router-dom";
 import { DataContext } from "./data-context";
+import Box from "./Box";
+import GreenButton from "./GreenButton";
+import RedButton from "./RedButton";
 
 function Height() {
-  let { isMetric , setHeight } = useContext(DataContext);
+  let { isMetric, setHeight } = useContext(DataContext);
+  let [hasError, setHasError] = useState<boolean>();
   const feetInputRef = useRef<HTMLInputElement>(null);
   const inchInputRef = useRef<HTMLInputElement>(null);
   const cmInputRef = useRef<HTMLInputElement>(null);
@@ -13,12 +16,36 @@ function Height() {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if(isMetric){
-      setHeight((Number(cmInputRef.current?.value)))
+
+    if (isMetric) {
+      const enteredCmValue = cmInputRef.current?.value;
+      if (
+        !enteredCmValue ||
+        Number(enteredCmValue) < 100 ||
+        Number(enteredCmValue) > 250
+      ) {
+        setHasError(true);
+        return;
+      } else {
+        setHeight(Number(enteredCmValue));
+        setHasError(false);
+      }
     } else {
       const enteredFeetValue = feetInputRef.current?.value;
       const enteredInchValue = inchInputRef.current?.value;
-      setHeight(Number(enteredFeetValue) * 12 + Number(enteredInchValue))
+      if (
+        !enteredFeetValue ||
+        !enteredInchValue ||
+        Number(enteredFeetValue) > 10 ||
+        Number(enteredFeetValue) < 4 ||
+        Number(enteredInchValue) > 12
+      ) {
+        setHasError(true);
+        return;
+      } else {
+        setHeight(Number(enteredFeetValue) * 12 + Number(enteredInchValue));
+        setHasError(false);
+      }
     }
     navigate("/weight");
   }
@@ -29,7 +56,10 @@ function Height() {
         <h2 className="text-3xl mt-12 font-semibold mx-6 text-center">
           Please Enter Your Height
         </h2>
-        <form className="flex flex-col gap-6 justify-center mt-2 w-[50%] mx-auto" onSubmit={handleSubmit}>
+        <form
+          className="flex flex-col gap-10 justify-center items-center align-center mt-4 x mx-auto overflow-visible"
+          onSubmit={handleSubmit}
+        >
           {!isMetric ? (
             <>
               <input
@@ -39,14 +69,14 @@ function Height() {
                 ref={feetInputRef}
                 id="height-foot"
                 placeholder="feet"
-                onChange={(e)=>setHeight(Number(e.target.value))}
-                className="text-black mt-1 block w-3/4 border border-gray-400 rounded p-2"
+                onChange={(e) => setHeight(Number(e.target.value))}
+                className="text-black mt-1 block w-3/4 border border-gray-400 h-12 rounded-lg p-2"
               />
               <input
                 type="number"
                 id="height-inch"
                 placeholder="inches"
-                className="text-black"
+                className="text-black block w-3/4 border border-gray-400 h-12 rounded-lg p-2"
                 min="0"
                 max="12"
                 ref={inchInputRef}
@@ -57,26 +87,24 @@ function Height() {
               type="number"
               id="height-cm"
               placeholder="centimeters"
-              className="text-black"
+              className="text-black mt-1 block w-3/4 border border-gray-400 h-12 rounded-lg p-2 mx-auto"
               min="100"
               max="250"
               ref={cmInputRef}
             />
           )}
-          <div className="flex gap-6 justify-center mt-8 w-[50%] mx-auto">
-            <button
-              type="submit"
-              className="border-solid border-green-400 border-2 p-2 rounded-lg hover:shadow-md hover:shadow-slate-500 active:bg-green-400"
-            >
-              Submit
-            </button>
-            <button
-              type="reset"
-              className="border-solid border-red-400 border-2 p-2 rounded-lg hover:shadow-md hover:shadow-slate-500 active:bg-red-400"
-              onClick={() => navigate("/units")}
-            >
+          {hasError ? (
+            <p className="text-red-500">
+              Please Enter a Valid Number For Your Height
+            </p>
+          ) : (
+            ""
+          )}
+          <div className="flex lg:flex-row flex-col w-[24rem] items-center justify-center gap-4">
+            <GreenButton type="submit">Submit</GreenButton>
+            <RedButton type="button" onClick={() => navigate("/units")}>
               Go Back
-            </button>
+            </RedButton>
           </div>
         </form>
       </Box>
